@@ -353,6 +353,9 @@ function hideHelp() {
     document.getElementById('titleScreen').style.display = 'flex';
 }
 
+// Setup event listeners immediately - before Three.js init which may fail
+setupEventListeners();
+
 // Three.js Setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
@@ -1162,12 +1165,4 @@ window.addEventListener('resize', () => {
 // initGame();
 // gameLoop();
 
-// Setup event listeners after all functions and objects are defined
-console.log('Document readyState:', document.readyState);
-if (document.readyState === 'loading') {
-    console.log('DOM still loading, adding DOMContentLoaded listener');
-    document.addEventListener('DOMContentLoaded', setupEventListeners);
-} else {
-    console.log('DOM already loaded, calling setupEventListeners immediately');
-    setupEventListeners();
-}
+// Event listeners were set up earlier, before Three.js initialization
