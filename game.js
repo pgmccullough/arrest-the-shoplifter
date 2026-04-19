@@ -32,6 +32,14 @@ function getMapScale() {
     return Math.pow(2, mapLevel - 1);
 }
 
+function getIncomeUpgradeCost() {
+    return Math.floor(BASE_INCOME_UPGRADE_COST * Math.pow(INCOME_COST_MULTIPLIER, incomeLevel - 1));
+}
+
+function getGoldMultiplier() {
+    return Math.pow(INCOME_MULTIPLIER, incomeLevel - 1);
+}
+
 function saveGold() {
     localStorage.setItem('totalGold', totalGold.toString());
 }
