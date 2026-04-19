@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrest the Shoplifter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Title Screen -->
+    <div class="title-screen" id="titleScreen">
+        <div class="title-content">
+            <h1>Arrest the Shoplifter</h1>
+            <div class="gold-display">
+                <span class="gold-icon">🏆</span>
+                <span class="gold-count" id="titleGold">0</span>
+                <span class="gold-label">Gold</span>
+            </div>
+            <div class="button-group">
+                <button class="menu-button" id="newGameBtn">New Game</button>
+                <button class="menu-button" id="continueBtn">Continue</button>
+                <button class="menu-button" id="upgradesBtn">Upgrades</button>
+                <button class="menu-button" id="helpBtn">Help</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrades Screen -->
+    <div class="upgrades-screen" id="upgradesScreen" style="display: none;">
+        <div class="upgrades-content">
+            <h1>Upgrades</h1>
+            <div class="gold-display" style="margin-bottom: 30px;">
+                <span class="gold-icon">🏆</span>
+                <span class="gold-count" id="upgradesGold">0</span>
+                <span class="gold-label">Gold</span>
+            </div>
+            
+            <div class="upgrade-item">
+                <div class="upgrade-header">
+                    <h3>Speed</h3>
+                    <span class="upgrade-level" id="speedLevel">Lv. 1</span>
+                </div>
+                <p class="upgrade-desc">Move faster through the store</p>
+                <div class="upgrade-stats">
+                    <span>Current: <strong id="speedValue">1.0x</strong></span>
+                </div>
+                <button class="upgrade-button" id="speedBtn" data-cost="50">Upgrade - 50 Gold</button>
+            </div>
+            
+            <div class="upgrade-item">
+                <div class="upgrade-header">
+                    <h3>Catch Range</h3>
+                    <span class="upgrade-level" id="catchLevel">Lv. 1</span>
+                </div>
+                <p class="upgrade-desc">Catch shoplifters from farther away</p>
+                <div class="upgrade-stats">
+                    <span>Current: <strong id="catchValue">1.5 units</strong></span>
+                </div>
+                <button class="upgrade-button" id="catchBtn" data-cost="50">Upgrade - 50 Gold</button>
+            </div>
+            
+            <div class="upgrade-item">
+                <div class="upgrade-header">
+                    <h3>Income</h3>
+                    <span class="upgrade-level" id="incomeLevel">Lv. 1</span>
+                </div>
+                <p class="upgrade-desc">Multiply gold earned from shoplifters</p>
+                <div class="upgrade-stats">
+                    <span>Current: <strong id="incomeValue">1.0x</strong></span>
+                </div>
+                <button class="upgrade-button" id="incomeBtn" data-cost="100">Upgrade - 100 Gold</button>
+            </div>
+            
+            <button class="menu-button" id="backFromUpgradesBtn" style="margin-top: 30px;">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Help Screen -->
+    <div class="help-screen" id="helpScreen" style="display: none;">
+        <div class="help-content">
+            <h1>How to Play</h1>
+            <div class="help-text">
+                <h3>Objective:</h3>
+                <p>Catch all 10 shoplifters in the store to win and earn gold!</p>
+                
+                <h3>Controls:</h3>
+                <ul>
+                    <li><strong>Click</strong> to lock mouse and look around</li>
+                    <li><strong>W/A/S/D</strong> or <strong>Arrow Keys</strong> to move</li>
+                    <li><strong>Mouse</strong> to turn and look</li>
+                </ul>
+                
+                <h3>Gameplay:</h3>
+                <ul>
+                    <li>You are an ICE officer in a black uniform with "ICE" written on it</li>
+                    <li>All shoplifters are wearing black ski masks</li>
+                    <li>Shoplifters will run away when they see you</li>
+                    <li>Get close to shoplifters to catch them</li>
+                    <li>Catch all 10 to win and earn gold!</li>
+                </ul>
+            </div>
+            <button class="menu-button" id="backBtn">Back to Menu</button>
+        </div>
+    </div>
+
+    <div class="hud" id="hud" style="display: none;">
+        <div class="score">Caught: <span id="caught">0</span>/10</div>
+        <div class="instructions">Arrow Keys/WASD to Move | Mouse to Look Around</div>
+        <div class="status" id="status"></div>
+    </div>
+    <div id="gameContainer" style="display: none;"></div>
+    <div class="game-over" id="gameOver" style="display: none;">
+        <div class="game-over-content">
+            <h1 id="result">YOU WIN!</h1>
+            <p>Total Caught: <span id="finalScore">0</span></p>
+            <p class="gold-earned" id="goldEarned" style="display: none;">+<span id="goldAmount">10</span> Gold!</p>
+            <button onclick="goToTitleScreen()">Return to Menu</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
