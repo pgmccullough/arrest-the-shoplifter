@@ -506,7 +506,9 @@ function applyMapScale() {
     for (let collObj of collisionObjects) {
         if (collObj.type === 'shelf') {
             collObj.object.scale.set(scale, 1, scale);
-            collObj.object.position.multiplyScalar(scale / (scale === 1 ? 1 : scale));
+            // Scale position on X and Z axes only
+            collObj.object.position.x *= scale;
+            collObj.object.position.z *= scale;
         }
     }
 }
