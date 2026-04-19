@@ -58,41 +58,57 @@ function updateGoldDisplay() {
 
 function updateUpgradeUI() {
     // Speed upgrade
-    const speedValue = (0.15 * Math.pow(SPEED_MULTIPLIER, speedLevel - 1) / 0.15).toFixed(1);
-    document.getElementById('speedLevel').textContent = `Lv. ${speedLevel}`;
-    document.getElementById('speedValue').textContent = `${speedValue}x`;
+    const speedLevelEl = document.getElementById('speedLevel');
+    const speedValueEl = document.getElementById('speedValue');
+    if (speedLevelEl) {
+        const speedValue = (0.15 * Math.pow(SPEED_MULTIPLIER, speedLevel - 1) / 0.15).toFixed(1);
+        speedLevelEl.textContent = `Lv. ${speedLevel}`;
+        if (speedValueEl) speedValueEl.textContent = `${speedValue}x`;
+    }
     
     const speedBtn = document.getElementById('speedBtn');
-    const speedCost = getSpeedUpgradeCost();
-    const canBuySpeed = totalGold >= speedCost;
-    speedBtn.disabled = !canBuySpeed;
-    if (canBuySpeed) {
-        speedBtn.textContent = `Upgrade - ${speedCost} Gold`;
-    } else {
-        const needed = speedCost - totalGold;
-        speedBtn.textContent = `Need ${needed} more Gold`;
+    if (speedBtn) {
+        const speedCost = getSpeedUpgradeCost();
+        const canBuySpeed = totalGold >= speedCost;
+        speedBtn.disabled = !canBuySpeed;
+        if (canBuySpeed) {
+            speedBtn.textContent = `Upgrade - ${speedCost} Gold`;
+        } else {
+            const needed = speedCost - totalGold;
+            speedBtn.textContent = `Need ${needed} more Gold`;
+        }
     }
     
     // Catch range upgrade
-    const catchValue = (1.5 + (CATCH_RANGE_INCREMENT * (catchLevel - 1))).toFixed(1);
-    document.getElementById('catchLevel').textContent = `Lv. ${catchLevel}`;
-    document.getElementById('catchValue').textContent = `${catchValue} units`;
+    const catchLevelEl = document.getElementById('catchLevel');
+    const catchValueEl = document.getElementById('catchValue');
+    if (catchLevelEl) {
+        const catchValue = (1.5 + (CATCH_RANGE_INCREMENT * (catchLevel - 1))).toFixed(1);
+        catchLevelEl.textContent = `Lv. ${catchLevel}`;
+        if (catchValueEl) catchValueEl.textContent = `${catchValue} units`;
+    }
     
     const catchBtn = document.getElementById('catchBtn');
-    const catchCost = getCatchUpgradeCost();
-    const canBuyCatch = totalGold >= catchCost;
-    catchBtn.disabled = !canBuyCatch;
-    if (canBuyCatch) {
-        catchBtn.textContent = `Upgrade - ${catchCost} Gold`;
-    } else {
-        const needed = catchCost - totalGold;
-        catchBtn.textContent = `Need ${needed} more Gold`;
+    if (catchBtn) {
+        const catchCost = getCatchUpgradeCost();
+        const canBuyCatch = totalGold >= catchCost;
+        catchBtn.disabled = !canBuyCatch;
+        if (canBuyCatch) {
+            catchBtn.textContent = `Upgrade - ${catchCost} Gold`;
+        } else {
+            const needed = catchCost - totalGold;
+            catchBtn.textContent = `Need ${needed} more Gold`;
+        }
     }
     
     // Income upgrade
-    const incomeValue = getGoldMultiplier().toFixed(1);
-    document.getElementById('incomeLevel').textContent = `Lv. ${mapLevel}`;
-    document.getElementById('incomeValue').textContent = `${incomeValue}x`;
+    const incomeLevelEl = document.getElementById('incomeLevel');
+    const incomeValueEl = document.getElementById('incomeValue');
+    if (incomeLevelEl) {
+        const incomeValue = getGoldMultiplier().toFixed(1);
+        incomeLevelEl.textContent = `Lv. ${mapLevel}`;
+        if (incomeValueEl) incomeValueEl.textContent = `${incomeValue}x`;
+    }
     
     const incomeBtn = document.getElementById('incomeBtn');
     if (incomeBtn) {
