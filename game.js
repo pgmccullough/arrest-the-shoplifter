@@ -208,13 +208,6 @@ function setupEventListeners() {
     });
 }
 
-// Title screen event listeners - setup immediately or on DOMContentLoaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupEventListeners);
-} else {
-    setupEventListeners();
-}
-
 function startNewGame() {
     // Reset game state for new game
     game.caught = 0;
@@ -1108,3 +1101,10 @@ window.addEventListener('resize', () => {
 // Initialize and start - will be called when user clicks "New Game"
 // initGame();
 // gameLoop();
+
+// Setup event listeners after all functions and objects are defined
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupEventListeners);
+} else {
+    setupEventListeners();
+}
