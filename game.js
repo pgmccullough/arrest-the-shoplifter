@@ -134,8 +134,8 @@ function goToTitleScreen() {
     location.reload();
 }
 
-// Title screen event listeners
-document.addEventListener('DOMContentLoaded', () => {
+// Function to setup event listeners
+function setupEventListeners() {
     updateGoldDisplay();
     updateUpgradeUI();
     
@@ -206,7 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUpgradeUI();
         }
     });
-});
+}
+
+// Title screen event listeners - setup immediately or on DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupEventListeners);
+} else {
+    setupEventListeners();
+}
 
 function startNewGame() {
     // Reset game state for new game
