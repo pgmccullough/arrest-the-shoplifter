@@ -155,12 +155,42 @@ function setupEventListeners() {
     updateGoldDisplay();
     updateUpgradeUI();
     
-    document.getElementById('newGameBtn').addEventListener('click', startNewGame);
-    document.getElementById('upgradesBtn').addEventListener('click', showUpgrades);
-    document.getElementById('backFromUpgradesBtn').addEventListener('click', hideUpgrades);
-    document.getElementById('helpBtn').addEventListener('click', showHelp);
-    document.getElementById('backBtn').addEventListener('click', hideHelp);
-    document.getElementById('resetBtn').addEventListener('click', resetUpgrades);
+    const newGameBtn = document.getElementById('newGameBtn');
+    if (newGameBtn) {
+        newGameBtn.addEventListener('click', (e) => {
+            console.log('New Game button clicked');
+            try {
+                startNewGame();
+            } catch (err) {
+                console.error('Error in startNewGame:', err);
+            }
+        });
+    }
+    
+    const upgradesBtn = document.getElementById('upgradesBtn');
+    if (upgradesBtn) {
+        upgradesBtn.addEventListener('click', showUpgrades);
+    }
+    
+    const backFromUpgradesBtn = document.getElementById('backFromUpgradesBtn');
+    if (backFromUpgradesBtn) {
+        backFromUpgradesBtn.addEventListener('click', hideUpgrades);
+    }
+    
+    const helpBtn = document.getElementById('helpBtn');
+    if (helpBtn) {
+        helpBtn.addEventListener('click', showHelp);
+    }
+    
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', hideHelp);
+    }
+    
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetUpgrades);
+    }
     
     // ESC key to pause/resume - listen for pointer lock exit
     document.addEventListener('pointerlockchange', () => {
@@ -175,53 +205,65 @@ function setupEventListeners() {
         }
     });
     
-    document.getElementById('speedBtn').addEventListener('click', () => {
-        const speedCost = getSpeedUpgradeCost();
-        if (totalGold >= speedCost) {
-            totalGold -= speedCost;
-            speedLevel++;
-            saveGold();
-            saveUpgrades();
-            updateGoldDisplay();
-            updateUpgradeUI();
-        }
-    });
+    const speedBtn = document.getElementById('speedBtn');
+    if (speedBtn) {
+        speedBtn.addEventListener('click', () => {
+            const speedCost = getSpeedUpgradeCost();
+            if (totalGold >= speedCost) {
+                totalGold -= speedCost;
+                speedLevel++;
+                saveGold();
+                saveUpgrades();
+                updateGoldDisplay();
+                updateUpgradeUI();
+            }
+        });
+    }
     
-    document.getElementById('catchBtn').addEventListener('click', () => {
-        const catchCost = getCatchUpgradeCost();
-        if (totalGold >= catchCost) {
-            totalGold -= catchCost;
-            catchLevel++;
-            saveGold();
-            saveUpgrades();
-            updateGoldDisplay();
-            updateUpgradeUI();
-        }
-    });
+    const catchBtn = document.getElementById('catchBtn');
+    if (catchBtn) {
+        catchBtn.addEventListener('click', () => {
+            const catchCost = getCatchUpgradeCost();
+            if (totalGold >= catchCost) {
+                totalGold -= catchCost;
+                catchLevel++;
+                saveGold();
+                saveUpgrades();
+                updateGoldDisplay();
+                updateUpgradeUI();
+            }
+        });
+    }
     
-    document.getElementById('incomeBtn').addEventListener('click', () => {
-        const incomeCost = getIncomeUpgradeCost();
-        if (totalGold >= incomeCost) {
-            totalGold -= incomeCost;
-            incomeLevel++;
-            saveGold();
-            saveUpgrades();
-            updateGoldDisplay();
-            updateUpgradeUI();
-        }
-    });
+    const incomeBtn = document.getElementById('incomeBtn');
+    if (incomeBtn) {
+        incomeBtn.addEventListener('click', () => {
+            const incomeCost = getIncomeUpgradeCost();
+            if (totalGold >= incomeCost) {
+                totalGold -= incomeCost;
+                incomeLevel++;
+                saveGold();
+                saveUpgrades();
+                updateGoldDisplay();
+                updateUpgradeUI();
+            }
+        });
+    }
     
-    document.getElementById('mapLevelBtn').addEventListener('click', () => {
-        const mapCost = getMapLevelUpgradeCost();
-        if (totalGold >= mapCost) {
-            totalGold -= mapCost;
-            mapLevel++;
-            saveGold();
-            saveUpgrades();
-            updateGoldDisplay();
-            updateUpgradeUI();
-        }
-    });
+    const mapLevelBtn = document.getElementById('mapLevelBtn');
+    if (mapLevelBtn) {
+        mapLevelBtn.addEventListener('click', () => {
+            const mapCost = getMapLevelUpgradeCost();
+            if (totalGold >= mapCost) {
+                totalGold -= mapCost;
+                mapLevel++;
+                saveGold();
+                saveUpgrades();
+                updateGoldDisplay();
+                updateUpgradeUI();
+            }
+        });
+    }
 }
 
 function startNewGame() {
