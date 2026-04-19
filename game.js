@@ -3,11 +3,14 @@ let totalGold = localStorage.getItem('totalGold') ? parseInt(localStorage.getIte
 let speedLevel = localStorage.getItem('speedLevel') ? parseInt(localStorage.getItem('speedLevel')) : 1;
 let catchLevel = localStorage.getItem('catchLevel') ? parseInt(localStorage.getItem('catchLevel')) : 1;
 let incomeLevel = localStorage.getItem('incomeLevel') ? parseInt(localStorage.getItem('incomeLevel')) : 1;
+let mapLevel = localStorage.getItem('mapLevel') ? parseInt(localStorage.getItem('mapLevel')) : 1;
 
 const BASE_SPEED_UPGRADE_COST = 50;
 const BASE_CATCH_UPGRADE_COST = 50;
 const BASE_INCOME_UPGRADE_COST = 100;
+const BASE_MAP_LEVEL_COST = 100;
 const COST_MULTIPLIER = 1.5; // Each upgrade multiplies cost by this
+const MAP_LEVEL_COST_MULTIPLIER = 10; // Map level cost multiplies by 10 each time
 const INCOME_COST_MULTIPLIER = 2; // Income upgrade cost doubles each time
 const SPEED_MULTIPLIER = 1.4; // Each level multiplies speed by this
 const CATCH_RANGE_INCREMENT = 0.5; // Each level adds this much to catch range
@@ -21,12 +24,12 @@ function getCatchUpgradeCost() {
     return Math.floor(BASE_CATCH_UPGRADE_COST * Math.pow(COST_MULTIPLIER, catchLevel - 1));
 }
 
-function getIncomeUpgradeCost() {
-    return Math.floor(BASE_INCOME_UPGRADE_COST * Math.pow(INCOME_COST_MULTIPLIER, incomeLevel - 1));
+function getMapLevelUpgradeCost() {
+    return Math.floor(BASE_MAP_LEVEL_COST * Math.pow(MAP_LEVEL_COST_MULTIPLIER, mapLevel - 1));
 }
 
-function getGoldMultiplier() {
-    return Math.pow(INCOME_MULTIPLIER, incomeLevel - 1);
+function getMapScale() {
+    return Math.pow(2, mapLevel - 1);
 }
 
 function saveGold() {
@@ -37,6 +40,7 @@ function saveUpgrades() {
     localStorage.setItem('speedLevel', speedLevel.toString());
     localStorage.setItem('catchLevel', catchLevel.toString());
     localStorage.setItem('incomeLevel', incomeLevel.toString());
+    localStorage.setItem('mapLevel', mapLevel.toString());
 }
 
 function applyUpgrades() {
@@ -87,7 +91,7 @@ function updateUpgradeUI() {
     
     // Income upgrade
     const incomeValue = getGoldMultiplier().toFixed(1);
-    document.getElementById('incomeLevel').textContent = `Lv. ${incomeLevel}`;
+    document.getElementById('incomeLevel').textContent = `Lv. ${mapLevel}`;
     document.getElementById('incomeValue').textContent = `${incomeValue}x`;
     
     const incomeBtn = document.getElementById('incomeBtn');
@@ -101,6 +105,27 @@ function updateUpgradeUI() {
             const needed = incomeCost - totalGold;
             incomeBtn.textContent = `Need ${needed} more Gold`;
         }
+    }
+    
+    // Map level upgrade
+    const mapLevelBtn = document.getElementById('mapLevelBtn');
+    if (mapLevelBtn) {
+        const mapCost = getMapLevelUpgradeCost();
+        const canBuyMapLevel = totalGold >= mapCost;
+        mapLevelBtn.disabled = !canBuyMapLevel;
+        const nextLevel = mapLevel + 1;
+        if (canBuyMapLevel) {
+            mapLevelBtn.textContent = `Upgrade to Level ${nextLevel} - ${mapCost} Gold`;
+        } else {
+            const needed = mapCost - totalGold;
+            mapLevelBtn.textContent = `Need ${needed} more Gold`;
+        }
+    }
+    
+    // Update New Game button to show level
+    const newGameBtn = document.getElementById('newGameBtn');
+    if (newGameBtn) {
+        newGameBtn.textContent = `New Game (Level ${mapLevel})`;
     }
 }
 
@@ -169,6 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUpgradeUI();
         }
     });
+    
+    document.getElementById('mapLevelBtn').addEventListener('click', () => {
+        const mapCost = getMapLevelUpgradeCost();
+        if (totalGold >= mapCost) {
+            totalGold -= mapCost;
+            mapLevel++;
+            saveGold();
+            saveUpgrades();
+            updateGoldDisplay();
+            updateUpgradeUI();
+        }
+    });
 });
 
 function startNewGame() {
@@ -193,6 +230,9 @@ function startNewGame() {
     
     // Apply upgrades
     applyUpgrades();
+    
+    // Apply map scale
+    applyMapScale();
     
     // Show game UI
     document.getElementById('titleScreen').style.display = 'none';
@@ -449,6 +489,28 @@ collisionObjects.push({
     type: 'wall'
 });
 
+// Apply map scaling based on mapLevel
+function applyMapScale() {
+    const scale = getMapScale();
+    floor.scale.set(scale, 1, scale);
+    backWall.scale.set(scale, 1, 1);
+    backWall.position.z = -10 * scale;
+    frontWall.scale.set(scale, 1, 1);
+    frontWall.position.z = 10 * scale;
+    leftWall.scale.set(1, 1, scale);
+    leftWall.position.x = -10 * scale;
+    rightWall.scale.set(1, 1, scale);
+    rightWall.position.x = 10 * scale;
+    
+    // Scale shelves
+    for (let collObj of collisionObjects) {
+        if (collObj.type === 'shelf') {
+            collObj.object.scale.set(scale, 1, scale);
+            collObj.object.position.multiplyScalar(scale / (scale === 1 ? 1 : scale));
+        }
+    }
+}
+
 // Game state
 const game = {
     caught: 0,
@@ -659,9 +721,10 @@ class Shoplifter {
         
         // Random starting position - check for collisions
         let validPosition = false;
+        const spawnRange = 7.5 * getMapScale();
         while (!validPosition) {
-            const testX = Math.random() * 15 - 7.5;
-            const testZ = Math.random() * 15 - 7.5;
+            const testX = Math.random() * spawnRange * 2 - spawnRange;
+            const testZ = Math.random() * spawnRange * 2 - spawnRange;
             const npcBox = new THREE.Box3(
                 new THREE.Vector3(testX - 0.25, -0.7, testZ - 0.15),
                 new THREE.Vector3(testX + 0.25, 0.7, testZ + 0.15)
@@ -741,7 +804,8 @@ class Shoplifter {
         
         // Check boundaries
         const checkBoundaries = (x, z) => {
-            return x < -9.5 || x > 9.5 || z < -9.5 || z > 9.5;
+            const boundary = 9.5 * getMapScale();
+            return x < -boundary || x > boundary || z < -boundary || z > boundary;
         };
         
         // Try to move in both X and Z independently
@@ -852,6 +916,7 @@ function resetUpgrades() {
         speedLevel = 1;
         catchLevel = 1;
         incomeLevel = 1;
+        mapLevel = 1;
         saveGold();
         saveUpgrades();
         updateGoldDisplay();
@@ -973,10 +1038,9 @@ function gameLoop() {
         playerController.position.copy(finalPosition);
         
         // Boundary collision (independent axes)
-        const boundaryMin = -9.5;
-        const boundaryMax = 9.5;
-        playerController.position.x = Math.max(boundaryMin, Math.min(boundaryMax, playerController.position.x));
-        playerController.position.z = Math.max(boundaryMin, Math.min(boundaryMax, playerController.position.z));
+        const boundary = 9.5 * getMapScale();
+        playerController.position.x = Math.max(-boundary, Math.min(boundary, playerController.position.x));
+        playerController.position.z = Math.max(-boundary, Math.min(boundary, playerController.position.z));
         
         // Update camera position
         camera.position.copy(playerController.position);
