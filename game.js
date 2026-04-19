@@ -182,11 +182,11 @@ function startNewGame() {
     game.npcs = [];
     
     // Reset player position and velocity
-    playerController.position.set(0, 1.6, -10);
+    playerController.position.set(0, 1.6, 5);
     playerController.velocity.set(0, 0, 0);
     playerController.pitch = 0;
     playerController.yaw = 0;
-    camera.position.set(0, 1.6, -10);
+    camera.position.set(0, 1.6, 5);
     
     // Initialize game
     initGame();
@@ -261,7 +261,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 );
-camera.position.set(0, 1.6, -10);
+camera.position.set(0, 1.6, 5);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
