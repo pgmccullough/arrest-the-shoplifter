@@ -152,6 +152,8 @@ function goToTitleScreen() {
 
 // Function to setup event listeners
 function setupEventListeners() {
+    console.log('setupEventListeners() called');
+    console.log('newGameBtn:', document.getElementById('newGameBtn'));
     updateGoldDisplay();
     updateUpgradeUI();
     
@@ -1161,8 +1163,11 @@ window.addEventListener('resize', () => {
 // gameLoop();
 
 // Setup event listeners after all functions and objects are defined
+console.log('Document readyState:', document.readyState);
 if (document.readyState === 'loading') {
+    console.log('DOM still loading, adding DOMContentLoaded listener');
     document.addEventListener('DOMContentLoaded', setupEventListeners);
 } else {
+    console.log('DOM already loaded, calling setupEventListeners immediately');
     setupEventListeners();
 }
