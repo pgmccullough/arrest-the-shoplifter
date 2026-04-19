@@ -182,11 +182,11 @@ function startNewGame() {
     game.npcs = [];
     
     // Reset player position and velocity
-    playerController.position.set(5, 1.6, -35);
+    playerController.position.set(0, 1.6, -10);
     playerController.velocity.set(0, 0, 0);
     playerController.pitch = 0;
     playerController.yaw = 0;
-    camera.position.set(5, 1.6, -35);
+    camera.position.set(0, 1.6, -10);
     
     // Initialize game
     initGame();
@@ -253,7 +253,7 @@ function hideHelp() {
 // Three.js Setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
-scene.fog = new THREE.Fog(0x87CEEB, 100, 500);
+scene.fog = new THREE.Fog(0x87CEEB, 20, 80);
 
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -261,7 +261,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 );
-camera.position.set(5, 1.6, -35);
+camera.position.set(0, 1.6, -10);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -302,7 +302,7 @@ directionalLight.shadow.mapSize.height = 2048;
 scene.add(directionalLight);
 
 // Floor
-const floorGeometry = new THREE.PlaneGeometry(100, 100);
+const floorGeometry = new THREE.PlaneGeometry(30, 30);
 const floorMaterial = new THREE.MeshLambertMaterial({ color: 0xD2B48C });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2;
@@ -314,10 +314,10 @@ const collisionObjects = [];
 
 function createShelf(x, z) {
     // Create left half of shelf
-    const leftShelfGeometry = new THREE.BoxGeometry(13, 3, 2);
+    const leftShelfGeometry = new THREE.BoxGeometry(6, 3, 2);
     const shelfMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
     const leftShelf = new THREE.Mesh(leftShelfGeometry, shelfMaterial);
-    leftShelf.position.set(x - 12, 1.5, z);
+    leftShelf.position.set(x - 6, 1.5, z);
     leftShelf.castShadow = true;
     leftShelf.receiveShadow = true;
     scene.add(leftShelf);
@@ -329,9 +329,9 @@ function createShelf(x, z) {
     });
     
     // Create right half of shelf
-    const rightShelfGeometry = new THREE.BoxGeometry(13, 3, 2);
+    const rightShelfGeometry = new THREE.BoxGeometry(6, 3, 2);
     const rightShelf = new THREE.Mesh(rightShelfGeometry, shelfMaterial);
-    rightShelf.position.set(x + 12, 1.5, z);
+    rightShelf.position.set(x + 6, 1.5, z);
     rightShelf.castShadow = true;
     rightShelf.receiveShadow = true;
     scene.add(rightShelf);
@@ -343,10 +343,10 @@ function createShelf(x, z) {
     });
 }
 
-for (let i = -2; i <= 2; i++) {
-    createShelf(i * 15, 0);
-    createShelf(i * 15, 15);
-    createShelf(i * 15, -15);
+for (let i = -1; i <= 1; i++) {
+    createShelf(i * 10, 0);
+    createShelf(i * 10, 10);
+    createShelf(i * 10, -10);
 }
 
 // Create aisle dividers (thin walls between shelf rows) - split with gap
@@ -397,10 +397,10 @@ const wallMaterial = new THREE.MeshLambertMaterial({ color: 0xF5DEB3 });
 
 // Back wall - full length
 const backWall = new THREE.Mesh(
-    new THREE.BoxGeometry(100, 10, 1),
+    new THREE.BoxGeometry(20, 10, 1),
     wallMaterial
 );
-backWall.position.set(0, 5, -50);
+backWall.position.set(0, 5, -10);
 backWall.receiveShadow = true;
 scene.add(backWall);
 collisionObjects.push({
@@ -411,10 +411,10 @@ collisionObjects.push({
 
 // Front wall - full length
 const frontWall = new THREE.Mesh(
-    new THREE.BoxGeometry(100, 10, 1),
+    new THREE.BoxGeometry(20, 10, 1),
     wallMaterial
 );
-frontWall.position.set(0, 5, 50);
+frontWall.position.set(0, 5, 10);
 frontWall.receiveShadow = true;
 scene.add(frontWall);
 collisionObjects.push({
@@ -424,10 +424,10 @@ collisionObjects.push({
 });
 
 const leftWall = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 10, 100),
+    new THREE.BoxGeometry(1, 10, 20),
     wallMaterial
 );
-leftWall.position.set(-50, 5, 0);
+leftWall.position.set(-10, 5, 0);
 leftWall.receiveShadow = true;
 scene.add(leftWall);
 collisionObjects.push({
@@ -437,10 +437,10 @@ collisionObjects.push({
 });
 
 const rightWall = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 10, 100),
+    new THREE.BoxGeometry(1, 10, 20),
     wallMaterial
 );
-rightWall.position.set(50, 5, 0);
+rightWall.position.set(10, 5, 0);
 rightWall.receiveShadow = true;
 scene.add(rightWall);
 collisionObjects.push({
@@ -659,9 +659,9 @@ class Shoplifter {
         
         // Random starting position
         this.group.position.set(
-            Math.random() * 80 - 40,
+            Math.random() * 15 - 7.5,
             0,
-            Math.random() * 80 - 40
+            Math.random() * 15 - 7.5
         );
         
         // Velocity and behavior
@@ -723,7 +723,7 @@ class Shoplifter {
         
         // Check boundaries
         const checkBoundaries = (x, z) => {
-            return x < -45 || x > 45 || z < -45 || z > 45;
+            return x < -9.5 || x > 9.5 || z < -9.5 || z > 9.5;
         };
         
         // Try to move in both X and Z independently
@@ -921,14 +921,30 @@ function gameLoop() {
         
         const newPosition = playerController.position.clone().add(moveDirection);
         
-        // Check collision before moving
-        if (!checkCollision(newPosition)) {
-            playerController.position.copy(newPosition);
+        // Check collision independently for X and Z axes
+        let finalPosition = playerController.position.clone();
+        
+        // Test X movement
+        const testXPos = playerController.position.clone();
+        testXPos.x += moveDirection.x;
+        if (!checkCollision(testXPos)) {
+            finalPosition.x = testXPos.x;
         }
         
-        // Boundary collision
-        playerController.position.x = Math.max(-49.5, Math.min(49.5, playerController.position.x));
-        playerController.position.z = Math.max(-49.5, Math.min(49.5, playerController.position.z));
+        // Test Z movement
+        const testZPos = playerController.position.clone();
+        testZPos.z += moveDirection.z;
+        if (!checkCollision(testZPos)) {
+            finalPosition.z = testZPos.z;
+        }
+        
+        playerController.position.copy(finalPosition);
+        
+        // Boundary collision (independent axes)
+        const boundaryMin = -9.5;
+        const boundaryMax = 9.5;
+        playerController.position.x = Math.max(boundaryMin, Math.min(boundaryMax, playerController.position.x));
+        playerController.position.z = Math.max(boundaryMin, Math.min(boundaryMax, playerController.position.z));
         
         // Update camera position
         camera.position.copy(playerController.position);
