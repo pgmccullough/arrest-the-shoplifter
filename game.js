@@ -115,11 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUpgradeUI();
     
     document.getElementById('newGameBtn').addEventListener('click', startNewGame);
-    document.getElementById('continueBtn').addEventListener('click', continueGame);
     document.getElementById('upgradesBtn').addEventListener('click', showUpgrades);
     document.getElementById('backFromUpgradesBtn').addEventListener('click', hideUpgrades);
     document.getElementById('helpBtn').addEventListener('click', showHelp);
     document.getElementById('backBtn').addEventListener('click', hideHelp);
+    document.getElementById('resetBtn').addEventListener('click', resetUpgrades);
     
     // ESC key to pause/resume - listen for pointer lock exit
     document.addEventListener('pointerlockchange', () => {
@@ -657,12 +657,30 @@ class Shoplifter {
         this.rightFoot.castShadow = true;
         this.rightLeg.add(this.rightFoot);
         
-        // Random starting position
-        this.group.position.set(
-            Math.random() * 15 - 7.5,
-            0,
-            Math.random() * 15 - 7.5
-        );
+        // Random starting position - check for collisions
+        let validPosition = false;
+        while (!validPosition) {
+            const testX = Math.random() * 15 - 7.5;
+            const testZ = Math.random() * 15 - 7.5;
+            const npcBox = new THREE.Box3(
+                new THREE.Vector3(testX - 0.25, -0.7, testZ - 0.15),
+                new THREE.Vector3(testX + 0.25, 0.7, testZ + 0.15)
+            );
+            
+            let collision = false;
+            for (let collObj of collisionObjects) {
+                collObj.box.setFromObject(collObj.object);
+                if (npcBox.intersectsBox(collObj.box)) {
+                    collision = true;
+                    break;
+                }
+            }
+            
+            if (!collision) {
+                this.group.position.set(testX, 0, testZ);
+                validPosition = true;
+            }
+        }
         
         // Velocity and behavior
         this.velocity = new THREE.Vector3(0, 0, 0);
@@ -828,6 +846,20 @@ class Shoplifter {
 }
 
 // Initialize shoplifters
+function resetUpgrades() {
+    if (confirm('Are you sure you want to reset all upgrades and gold? This cannot be undone.')) {
+        totalGold = 0;
+        speedLevel = 1;
+        catchLevel = 1;
+        incomeLevel = 1;
+        saveGold();
+        saveUpgrades();
+        updateGoldDisplay();
+        updateUpgradeUI();
+        alert('Upgrades and gold have been reset!');
+    }
+}
+
 function initGame() {
     // Clear existing NPCs from scene
     for (let npc of game.npcs) {
