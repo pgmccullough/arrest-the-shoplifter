@@ -239,6 +239,7 @@ function startNewGame() {
     document.getElementById('helpScreen').style.display = 'none';
     document.getElementById('hud').style.display = 'flex';
     document.getElementById('gameContainer').style.display = 'block';
+    document.getElementById('gameContainer').classList.add('active');
     document.getElementById('gameOver').style.display = 'none';
     
     gameLoop();
@@ -252,6 +253,7 @@ function continueGame() {
         document.getElementById('titleScreen').style.display = 'none';
         document.getElementById('hud').style.display = 'flex';
         document.getElementById('gameContainer').style.display = 'block';
+        document.getElementById('gameContainer').classList.add('active');
         gameLoop();
     } else {
         // Start new game if not paused
@@ -264,6 +266,7 @@ function pauseGame() {
     game.isPaused = true;
     document.getElementById('hud').style.display = 'none';
     document.getElementById('gameContainer').style.display = 'block';
+    document.getElementById('gameContainer').classList.remove('active');
     document.getElementById('titleScreen').style.display = 'flex';
 }
 
